@@ -1,0 +1,60 @@
+$script = <<-SCRIPT
+sudo apt-get update -y
+sudo apt-get install -y ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update -y
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo usermod -a -G docker vagrant
+docker login -u ehszl409 --password-stdin < /vagrant/env/docker_token
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/focal64"
+
+  config.vm.define "dockerserver" do |dockerserver|
+    dockerserver.vm.hostname = "docker-server"
+    dockerserver.vm.provider "virtualbox" do |vb|
+      vb.name = "docker-server1"
+      vb.cpus = 2
+      vb.memory = 4096
+    end
+    dockerserver.vm.network "private_network", ip: "192.168.10.1"
+    dockerserver.vm.provision "shell", inline: $script
+  end
+
+  # config.vm.define "dock2" do |dock2|
+  #   dock2.vm.hostname = "docker-repo"
+  #   dock2.vm.provider "virtualbox" do |vb|
+  #     vb.name = "docker-repo"
+  #     vb.cpus = 2
+  #     vb.memory = 4096
+  #   end
+  #   dock2.vm.network "private_network", ip: "192.168.33.200"
+  #   dock2.vm.provision "shell", inline: $script
+  #   dock2.vm.provision "shell", inline: <<-SCRIPT
+  #   sudo su - -c 'echo "192.168.33.200    dock.repo.co.kr" >> /etc/hosts'
+  #   sudo openssl req -newkey rsa:4096 -nodes -sha256 \
+  #     -keyout dock.repo.co.kr.key \
+  #     -subj "/C=KR/ST=Korea/L=Busan/O=mzcloud/OU=mzcloud/CN=dock.repo.co.kr/emailAddress=hyuni@mz.co.kr" \
+  #     -addext "subjectAltName = DNS:dock.repo.co.kr" -x509 -days 365 \
+  #     -out dock.repo.co.kr.crt
+  #   mkdir certs/
+  #   sudo cp dock.repo.co.kr.* /vagrant/env/certs/
+  #   sudo mv dock.repo.co.kr.* certs/
+  #   sudo mkdir -p /etc/docker/certs.d/dock.repo.co.kr/
+  #   sudo cp certs/dock.repo.co.kr.crt /etc/docker/certs.d/dock.repo.co.kr/
+  #   sudo cp certs/dock.repo.co.kr.crt /usr/local/share/ca-certificates/
+  #   docker pull registry
+  #   docker run -d --restart=always --name image_repo \
+  #     -v /home/vagrant/certs:/certs \
+  #     -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+  #     -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/dock.repo.co.kr.crt \
+  #     -e REGISTRY_HTTP_TLS_KEY=/certs/dock.repo.co.kr.key \
+  #     -p 443:443 registry
+  # SCRIPT
+  # end
+end
