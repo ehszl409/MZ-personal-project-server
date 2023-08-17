@@ -1,13 +1,12 @@
 pipeline {
-    agent any
-    // agent {
-    //     docker {
-    //         image 'maven:3.8.3-openjdk-17'
-    //         reuseNode true
-    //         registryUrl 'https://index.docker.io/v1/'
-    //         registryCredentialsId 'docker-hub'
-    //     }
-    // }
+    agent {
+        docker {
+            image 'maven:3.8.3-openjdk-17'
+            reuseNode true
+            registryUrl 'https://index.docker.io/v1/'
+            registryCredentialsId 'docker-hub'
+        }
+    }
     environment {
         GC = credentials('github-spring-cicd') //생성하세여
         GIT_REPO = 'MZ-personal-project-server'
@@ -63,6 +62,7 @@ pipeline {
         //     }
         
         // }     
+        agent any
         stage('dockerfile build'){
             steps{
                 script{
