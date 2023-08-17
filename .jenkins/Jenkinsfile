@@ -18,11 +18,11 @@ pipeline {
         githubPush()
     }
     stages {
-        stage('maven build, test, packaging(war)') {
-            steps {
-                sh 'mvn clean install'
-            }     
-        }
+        // stage('maven build, test, packaging(war)') {
+        //     steps {
+        //         sh 'mvn clean install'
+        //     }     
+        // }
         // stage('github create release') {
         //     steps {
         //         script { def response = sh(script: """                    
