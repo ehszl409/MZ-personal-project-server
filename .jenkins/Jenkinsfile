@@ -5,6 +5,8 @@ pipeline {
         GIT_REPO = 'MZ-personal-project-server'
         GIT_USERNAME = 'ehszl409'
         TAG_VERSION = 'v1.0.0'
+
+        DS = credentials('docker-secret')
     }
     triggers {
         githubPush()
@@ -97,8 +99,11 @@ pipeline {
                     withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
                     { 
                         sh './kubectl config use-context kubernetes-admin@kubernetes'
-                        sh './kubectl config current-context'
-                        // sh './kubectl get nodes'
+                        sh "kubectl create secret docker-registry docker-pull-secret \
+                            --docker-server=https://index.docker.io/v1/ \
+                            --docker-username=ehszl409 \
+                            --docker-password=${DS_PSW}"
+                        sh 'kubectl get secret'
                     }
                 }
             }
