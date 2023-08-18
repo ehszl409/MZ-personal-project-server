@@ -87,23 +87,20 @@ pipeline {
         //         }
         //     }
         // }
-        stage ('k8s connected'){
+        stage ('k8s connection'){
             steps{
                 script {
                     sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
                     sh 'chmod +x kubectl'
                     // sh './kubectl version --client'
                     // sh './kubectl --kubeconfig=$KUBE_CONFIG apply -f /vagrant/kuber-yaml/test1.yaml'
-                    withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kuber-control:6443'])
+                    withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
                     { 
                         sh './kubectl config use-context kubernetes-admin@kubernetes'
                         sh './kubectl get nodes'
                     }
-                    
                 }
-                
             }
-            
         }               
     }
 }
