@@ -108,7 +108,7 @@ pipeline {
         //         }
         //     }
         // }
-        stage{
+        stage('host docker connection'){
             steps{
                 sh 'docker -H tcp://192.168.10.1:2375 ps -a'
             }
