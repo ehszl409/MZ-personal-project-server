@@ -40,7 +40,7 @@ metadata:
     name: myingress                   # Ingress 리소스의 레이블
   annotations:
     # Nginx Ingress가 처리할 때, 요청을 받으면 URI를 다시 쓰기 위한 설정 (경로를 변경할 수 있음)
-    nginx.ingress.kubernetes.io/rewrite-target: "/personal-prj-tomcat/"
+    nginx.ingress.kubernetes.io/rewrite-target: "/MZ-personal-project-server/"
     # Ingress 리소스를 처리할 Ingress Controller (여기서는 nginx Ingress Controller를 사용)
     kubernetes.io/ingress.class: nginx
 spec:
