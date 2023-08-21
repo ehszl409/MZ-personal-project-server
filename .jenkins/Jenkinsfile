@@ -25,89 +25,89 @@ pipeline {
                     sh 'mvn clean install'
                 }     
         }
-        stage('github create release') {
-            steps {
-                script { def response = sh(script: """                    
-                        curl -sSL \
-                              -X POST \
-                              -H "Accept: application/vnd.github+json" \
-                              -H "Authorization: Bearer ${GC_PSW}" \
-                              -H "X-GitHub-Api-Version: 2022-11-28" \
-                              https://api.github.com/repos/${GIT_USERNAME}/${GIT_REPO}/releases \
-                              -d '{
-                                      "tag_name":"${TAG_VERSION}",
-                                      "target_commitish":"main",
-                                      "name":"${TAG_VERSION}",
-                                      "body":"Description of the release",
-                                      "draft":false,
-                                      "prerelease":false,
-                                      "generate_release_notes":false
-                                    }'
-                    """, returnStdout: true)
+        // stage('github create release') {
+        //     steps {
+        //         script { def response = sh(script: """                    
+        //                 curl -sSL \
+        //                       -X POST \
+        //                       -H "Accept: application/vnd.github+json" \
+        //                       -H "Authorization: Bearer ${GC_PSW}" \
+        //                       -H "X-GitHub-Api-Version: 2022-11-28" \
+        //                       https://api.github.com/repos/${GIT_USERNAME}/${GIT_REPO}/releases \
+        //                       -d '{
+        //                               "tag_name":"${TAG_VERSION}",
+        //                               "target_commitish":"main",
+        //                               "name":"${TAG_VERSION}",
+        //                               "body":"Description of the release",
+        //                               "draft":false,
+        //                               "prerelease":false,
+        //                               "generate_release_notes":false
+        //                             }'
+        //             """, returnStdout: true)
 
-                    def json = readJSON text: "$response"
-                    def id = json.id
+        //             def json = readJSON text: "$response"
+        //             def id = json.id
 
-                    sh "mv target/demo-0.0.1-SNAPSHOT.war ${GIT_REPO}-${TAG_VERSION}.war"
+        //             sh "mv target/demo-0.0.1-SNAPSHOT.war ${GIT_REPO}-${TAG_VERSION}.war"
                         
-                    sh """
-                        curl -sSL \
-                            -X POST \
-                            -H "Accept: application/vnd.github+json" \
-                            -H "Authorization: Bearer ${GC_PSW}" \
-                            -H "X-GitHub-Api-Version: 2022-11-28" \
-                            -H "Content-Type: application/octet-stream" \
-                            "https://uploads.github.com/repos/${GIT_USERNAME}/${GIT_REPO}/releases/${id}/assets?name=${GIT_REPO}-${TAG_VERSION}.war" \
-                            --data-binary "@${GIT_REPO}-${TAG_VERSION}.war"
-                    """
-                    sh "mv ${GIT_REPO}-${TAG_VERSION}.war ${GIT_REPO}.war"
-                }
-            }
-        }     
-        stage('dockerfile build'){
-            steps{
-                script{
-                    // Docker hub 에 로그인 하기 위해 사용
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
-                        // Dockerfile 로 이미지 생성 
-                        // docker.build("태그명", "Dockerfile 경로") docker pipeline 설치 후 사용 가능
-                        docker.build("ehszl409/personal-prj-tomcat:${TAG_VERSION}", "./")    
-                    }
-                }
-            }
-        }
-        stage('Docker tomcat Image Push'){
-            steps{
-                script{
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub'){
-                        // 저장된 이미지를 변수에 담고 변수를 푸쉬하는 스크립트
-                        def img = docker.image('ehszl409/personal-prj-tomcat')
-                        img.push("${TAG_VERSION}")
-                        img.push('latest')
-                    }
-                }
-            }
-        }
-        stage ('k8s connection'){
-            steps{
-                script {
-                    sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
-                    sh 'chmod +x kubectl'
-                    // sh './kubectl version --client'
-                    // sh './kubectl --kubeconfig=$KUBE_CONFIG apply -f /vagrant/kuber-yaml/test1.yaml'
-                    withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
-                    { 
-                        sh './kubectl config use-context kubernetes-admin@kubernetes'
-                        // sh './kubectl delete secret docker-pull-secret'
-                        // sh "./kubectl create secret docker-registry docker-pull-secret \
-                        //     --docker-server=https://index.docker.io/v1/ \
-                        //     --docker-username=ehszl409 \
-                        //     --docker-password=${DS_PSW}"
-                        sh './kubectl get secrets'
-                    }
-                }
-            }
-        }
+        //             sh """
+        //                 curl -sSL \
+        //                     -X POST \
+        //                     -H "Accept: application/vnd.github+json" \
+        //                     -H "Authorization: Bearer ${GC_PSW}" \
+        //                     -H "X-GitHub-Api-Version: 2022-11-28" \
+        //                     -H "Content-Type: application/octet-stream" \
+        //                     "https://uploads.github.com/repos/${GIT_USERNAME}/${GIT_REPO}/releases/${id}/assets?name=${GIT_REPO}-${TAG_VERSION}.war" \
+        //                     --data-binary "@${GIT_REPO}-${TAG_VERSION}.war"
+        //             """
+        //             sh "mv ${GIT_REPO}-${TAG_VERSION}.war ${GIT_REPO}.war"
+        //         }
+        //     }
+        // }     
+        // stage('dockerfile build'){
+        //     steps{
+        //         script{
+        //             // Docker hub 에 로그인 하기 위해 사용
+        //             docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
+        //                 // Dockerfile 로 이미지 생성 
+        //                 // docker.build("태그명", "Dockerfile 경로") docker pipeline 설치 후 사용 가능
+        //                 docker.build("ehszl409/personal-prj-tomcat:${TAG_VERSION}", "./")    
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('Docker tomcat Image Push'){
+        //     steps{
+        //         script{
+        //             docker.withRegistry('https://index.docker.io/v1/', 'docker-hub'){
+        //                 // 저장된 이미지를 변수에 담고 변수를 푸쉬하는 스크립트
+        //                 def img = docker.image('ehszl409/personal-prj-tomcat')
+        //                 img.push("${TAG_VERSION}")
+        //                 img.push('latest')
+        //             }
+        //         }
+        //     }
+        // }
+        // stage ('k8s connection'){
+        //     steps{
+        //         script {
+        //             sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
+        //             sh 'chmod +x kubectl'
+        //             // sh './kubectl version --client'
+        //             // sh './kubectl --kubeconfig=$KUBE_CONFIG apply -f /vagrant/kuber-yaml/test1.yaml'
+        //             withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
+        //             { 
+        //                 sh './kubectl config use-context kubernetes-admin@kubernetes'
+        //                 // sh './kubectl delete secret docker-pull-secret'
+        //                 // sh "./kubectl create secret docker-registry docker-pull-secret \
+        //                 //     --docker-server=https://index.docker.io/v1/ \
+        //                 //     --docker-username=ehszl409 \
+        //                 //     --docker-password=${DS_PSW}"
+        //                 sh './kubectl get secrets'
+        //             }
+        //         }
+        //     }
+        // }
         stage('host docker connection'){
             steps{
                 sh 'docker -H tcp://192.168.10.1:2375 ps -a'
@@ -129,7 +129,7 @@ pipeline {
                         """
                     }
                 }
-                timeout(time: 1, unit: 'MINUTES') {
+                timeout(time: 3, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }        
