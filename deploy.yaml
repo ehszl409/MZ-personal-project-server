@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: first-app                   # 컨테이너 이름
-    image: ehszl409/personal-prj-tomcat               # 컨테이너 이미지 (Nginx 서버 최신 버전)
+    image: ehszl409/personal-prj-tomcat:latest           # 컨테이너 이미지 (Nginx 서버 최신 버전)
     resources:
       limits:
         memory: "128Mi"               # 메모리 제한
