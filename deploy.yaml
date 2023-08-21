@@ -1,21 +1,28 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: first-app                     # Pod의 이름
-  labels:
-   app: first-app                     # Pod의 레이블
+  name: tomcat-server
 spec:
-  containers:
-  - name: first-app                   # 컨테이너 이름
-    image: ehszl409/personal-prj-tomcat:latest           # 컨테이너 이미지 (Nginx 서버 최신 버전)
-    resources:
-      limits:
-        memory: "256Mi"               # 메모리 제한
-        cpu: "500m"                   # CPU 제한
-    ports:
-      - containerPort: 8080             # 컨테이너 포트 설정 (80번 포트 사용)
-  imagePullSecrets:
-  - name: docker-pull-secret          # 이미지를 가져올 때 사용할 시크릿 이름
+  selector:
+    matchLabels:
+      app: first-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: first-app
+    spec:
+      containers:
+      - name: test
+        image: ehszl409/personal-prj-tomcat:latest
+        resources:
+          limits: 
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: docker-pull-secret
           
 # 세 번째 리소스: first-service Service 생성
 ---
