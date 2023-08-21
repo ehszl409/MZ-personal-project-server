@@ -123,7 +123,7 @@ pipeline {
                             docker run --rm \
                                 -e SONAR_HOST_URL=$SONAR_HOST_URL \
                                 -e SONAR_LOGIN=$SONAR_AUTH_TOKEN \
-                                -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=parks' \
+                                -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=parkproject' \
                                 -v /var/lib/docker/volumes/jenkins-volume/_data/workspace/spring-cicd:/usr/src \
                                 sonarsource/sonar-scanner-cli
                         """
