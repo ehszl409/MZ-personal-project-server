@@ -115,6 +115,25 @@ pipeline {
                 sh "docker -H tcp://192.168.10.1:2375 push localhost:5000/tomcat:${TAG_VERSION}"
                 
             }
-        }               
+        }
+        stage('소나 큐브로 품질 테스트 진행') {
+            steps {
+                script {
+                    withSonarQubeEnv('parksproject') {
+                        sh """
+                            docker run --rm \
+                                -e SONAR_HOST_URL=$SONAR_HOST_URL \
+                                -e SONAR_LOGIN=$SONAR_AUTH_TOKEN \
+                                -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=parks' \
+                                -v /var/lib/docker/volumes/jenkins-volume/_data/workspace/spring-cicd:/usr/src \
+                                sonarsource/sonar-scanner-cli
+                        """
+                    }
+                }
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }        
+        }
     }
 }
