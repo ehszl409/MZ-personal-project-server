@@ -104,7 +104,6 @@ pipeline {
                             --docker-username=ehszl409 \
                             --docker-password=${DS_PSW}"
                         sh './kubectl get secrets'
-\
                     }
                 }
             }
