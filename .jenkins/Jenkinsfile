@@ -88,24 +88,29 @@ pipeline {
         //         }
         //     }
         // }
-        stage ('k8s connection'){
+        // stage ('k8s connection'){
+        //     steps{
+        //         script {
+        //             sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
+        //             sh 'chmod +x kubectl'
+        //             // sh './kubectl version --client'
+        //             // sh './kubectl --kubeconfig=$KUBE_CONFIG apply -f /vagrant/kuber-yaml/test1.yaml'
+        //             withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
+        //             { 
+        //                 sh './kubectl config use-context kubernetes-admin@kubernetes'
+        //                 sh './kubectl delete secret docker-pull-secret'
+        //                 sh "./kubectl create secret docker-registry docker-pull-secret \
+        //                     --docker-server=https://index.docker.io/v1/ \
+        //                     --docker-username=ehszl409 \
+        //                     --docker-password=${DS_PSW}"
+        //                 sh './kubectl get secrets'
+        //             }
+        //         }
+        //     }
+        // }
+        stage{
             steps{
-                script {
-                    sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
-                    sh 'chmod +x kubectl'
-                    // sh './kubectl version --client'
-                    // sh './kubectl --kubeconfig=$KUBE_CONFIG apply -f /vagrant/kuber-yaml/test1.yaml'
-                    withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
-                    { 
-                        sh './kubectl config use-context kubernetes-admin@kubernetes'
-                        sh './kubectl delete secret docker-pull-secret'
-                        sh "./kubectl create secret docker-registry docker-pull-secret \
-                            --docker-server=https://index.docker.io/v1/ \
-                            --docker-username=ehszl409 \
-                            --docker-password=${DS_PSW}"
-                        sh './kubectl get secrets'
-                    }
-                }
+                sh 'docker -H tcp://192.168.10.1:2375 ps -a'
             }
         }               
     }
