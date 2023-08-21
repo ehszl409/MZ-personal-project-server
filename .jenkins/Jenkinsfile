@@ -12,19 +12,38 @@ pipeline {
         githubPush()
     }
     stages {
-        stage('maven build, test, packaging(war)') {
-            agent {
-                docker {
-                    image 'maven:3.8.3-openjdk-17'
-                    reuseNode true
-                    registryUrl 'https://index.docker.io/v1/'
-                    registryCredentialsId 'docker-hub'
-                }
-            }
-                steps {
-                    sh 'mvn clean install'
-                }     
-        }
+        // stage('maven build, test, packaging(war)') {
+        //     agent {
+        //         docker {
+        //             image 'maven:3.8.3-openjdk-17'
+        //             reuseNode true
+        //             registryUrl 'https://index.docker.io/v1/'
+        //             registryCredentialsId 'docker-hub'
+        //         }
+        //     }
+        //         steps {
+        //             sh 'mvn clean install'
+        //         }     
+        // }
+        // stage('sonarQube Testing') {
+        //     steps {
+        //         script {
+        //             withSonarQubeEnv('sonarproject') {
+        //                 sh """
+        //                     docker run --rm \
+        //                         -e SONAR_HOST_URL=$SONAR_HOST_URL \
+        //                         -e SONAR_LOGIN=$SONAR_AUTH_TOKEN \
+        //                         -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=sonarproject -Dsonar.java.binaries=./target -Dsonar.verbose=true' \
+        //                         -v /var/lib/docker/volumes/jenkins-volume/_data/workspace/spring-cicd:/usr/src \
+        //                         sonarsource/sonar-scanner-cli
+        //                 """
+        //             }
+        //         }
+        //         timeout(time: 3, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }        
+        // }
         // stage('github create release') {
         //     steps {
         //         script { def response = sh(script: """                    
@@ -115,25 +134,6 @@ pipeline {
                     }
                 }
             }
-        }
-        stage('sonarQube Testing') {
-            steps {
-                script {
-                    withSonarQubeEnv('sonarproject') {
-                        sh """
-                            docker run --rm \
-                                -e SONAR_HOST_URL=$SONAR_HOST_URL \
-                                -e SONAR_LOGIN=$SONAR_AUTH_TOKEN \
-                                -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=sonarproject -Dsonar.java.binaries=./target -Dsonar.verbose=true' \
-                                -v /var/lib/docker/volumes/jenkins-volume/_data/workspace/spring-cicd:/usr/src \
-                                sonarsource/sonar-scanner-cli
-                        """
-                    }
-                }
-                timeout(time: 3, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }        
         }
     }
 }
