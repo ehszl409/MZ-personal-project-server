@@ -108,13 +108,13 @@ pipeline {
         //         }
         //     }
         // }
-        stage('host docker connection'){
-            steps{
-                sh 'docker -H tcp://192.168.10.1:2375 ps -a'
-                sh "docker -H tcp://192.168.10.1:2375 tag ehszl409/personal-prj-tomcat:${TAG_VERSION} localhost:5000/tomcat:${TAG_VERSION}"
-                sh "docker -H tcp://192.168.10.1:2375 push localhost:5000/tomcat:${TAG_VERSION}"
-            }
-        }
+        // stage('host docker connection'){
+        //     steps{
+        //         sh 'docker -H tcp://192.168.10.1:2375 ps -a'
+        //         sh "docker -H tcp://192.168.10.1:2375 tag ehszl409/personal-prj-tomcat:${TAG_VERSION} localhost:5000/tomcat:${TAG_VERSION}"
+        //         sh "docker -H tcp://192.168.10.1:2375 push localhost:5000/tomcat:${TAG_VERSION}"
+        //     }
+        // }
         stage('소나 큐브로 품질 테스트 진행') {
             steps {
                 script {
