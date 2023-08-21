@@ -113,7 +113,7 @@ pipeline {
                 sh 'docker -H tcp://192.168.10.1:2375 ps -a'
                 sh "docker -H tcp://192.168.10.1:2375 docker tag ehszl409/personal-prj-tomcat:${TAG_VERSION} localhost:5000/tomcat:v1.0.42
 docker push localhost:5000/tomcat:${TAG_VERSION}"
-                sh "docker push localhost:5000/tomcat:${TAG_VERSION}"
+                sh "docker -H tcp://192.168.10.1:2375 push localhost:5000/tomcat:${TAG_VERSION}"
                 
             }
         }               
