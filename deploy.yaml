@@ -10,7 +10,7 @@ spec:
     image: ehszl409/personal-prj-tomcat:latest           # 컨테이너 이미지 (Nginx 서버 최신 버전)
     resources:
       limits:
-        memory: "128Mi"               # 메모리 제한
+        memory: "256Mi"               # 메모리 제한
         cpu: "500m"                   # CPU 제한
     ports:
       - containerPort: 8080             # 컨테이너 포트 설정 (80번 포트 사용)
