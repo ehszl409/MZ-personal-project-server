@@ -99,7 +99,7 @@ pipeline {
             steps{
                 script{
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub'){
-                        def img = docker.image('ehszl409/personal-prj-tomcat')
+                        def img = docker.image("ehszl409/personal-prj-tomcat:${TAG_VERSION}")
                         img.push("${TAG_VERSION}")
                         img.push('latest')
                     }
