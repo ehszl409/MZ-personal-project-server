@@ -95,18 +95,18 @@ pipeline {
                 }
             }
         }
-        // stage('dockerHub Push'){
-        //     steps{
-        //         script{
-        //             docker.withRegistry('https://index.docker.io/v1/', 'docker-hub'){
-        //                 // 저장된 이미지를 변수에 담고 변수를 푸쉬하는 스크립트..
-        //                 def img = docker.image('ehszl409/personal-prj-tomcat')
-        //                 img.push("${TAG_VERSION}")
-        //                 img.push('latest')
-        //             }
-        //         }
-        //     }
-        // }
+        stage('dockerHub Push'){
+            steps{
+                script{
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub'){
+                        // 저장된 이미지를 변수에 담고 변수를 푸쉬하는 스크립트..
+                        def img = docker.image('ehszl409/personal-prj-tomcat')
+                        img.push("${TAG_VERSION}")
+                        img.push('latest')
+                    }
+                }
+            }
+        }
         // stage('dockerRegi push'){
         //     steps{
         //         sh 'docker -H tcp://192.168.10.1:2375 ps -a'
