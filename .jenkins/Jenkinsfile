@@ -79,7 +79,7 @@ pipeline {
                             "https://uploads.github.com/repos/${GIT_USERNAME}/${GIT_REPO}/releases/${id}/assets?name=${GIT_REPO}-${TAG_VERSION}.war" \
                             --data-binary "@${GIT_REPO}-${TAG_VERSION}.war"
                     """
-                    sh "mv ${GIT_REPO}-${TAG_VERSION}.war Root.war"
+                    sh "mv ${GIT_REPO}-${TAG_VERSION}.war ROOT.war"
                 }
             }
         }     
