@@ -17,7 +17,7 @@ spec:
         image: ehszl409/personal-prj-tomcat:latest
         resources:
           limits: 
-            memory: "256Mi"
+            memory: "512Mi"
             cpu: "500m"
         ports:
         - containerPort: 8080
@@ -34,7 +34,7 @@ spec:
   selector:
     app: first-app                    # first-app 레이블이 붙은 Pod를 선택
   ports:
-  - port: 8080                          # 서비스 포트 설정 (80번 포트 사용)
+  - port: 80                           # 서비스 포트 설정 (80번 포트 사용)
     targetPort: 8080                    # 선택된 Pod의 대상 포트 설정 (80번 포트 사용)
 
 # 다섯 번째 리소스: myingress Ingress 리소스 생성
@@ -61,4 +61,4 @@ spec:
           service:
             name: first-service        # 연결할 서비스 이름 (first-service)
             port:
-              number: 8080               # 대상 서비스 포트 번호 (80)
+              number: 80               # 대상 서비스 포트 번호 (80)
