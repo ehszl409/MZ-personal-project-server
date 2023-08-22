@@ -4,7 +4,7 @@ pipeline {
         GC = credentials('MZ-web_token')
         GIT_REPO = 'MZ-web'
         GIT_USERNAME = 'ehszl409'
-        TAG_VERSION = "v1.0.$BUILD_NUMBER"
+        TAG_VERSION = "v1.1.$BUILD_NUMBER"
     }
     triggers {
         githubPush()
