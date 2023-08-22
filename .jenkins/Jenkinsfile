@@ -90,23 +90,23 @@ pipeline {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
                         // Dockerfile 로 이미지 생성 
                         // docker.build("태그명", "Dockerfile 경로") docker pipeline 설치 후 사용 가능
-                        docker.build("ehszl409/personal-prj-tomcat:${TAG_VERSION}", "--no-cache ./")    
+                        docker.build("ehszl409/personal-prj-tomcat:test1", "--no-cache ./")    
                     }
                 }
             }
         }
-        stage('dockerHub Push'){
-            steps{
-                script{
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub'){
-                        // 저장된 이미지를 변수에 담고 변수를 푸쉬하는 스크립트..
-                        def img = docker.image('ehszl409/personal-prj-tomcat')
-                        img.push("${TAG_VERSION}")
-                        img.push('latest')
-                    }
-                }
-            }
-        }
+        // stage('dockerHub Push'){
+        //     steps{
+        //         script{
+        //             docker.withRegistry('https://index.docker.io/v1/', 'docker-hub'){
+        //                 // 저장된 이미지를 변수에 담고 변수를 푸쉬하는 스크립트..
+        //                 def img = docker.image('ehszl409/personal-prj-tomcat')
+        //                 img.push("${TAG_VERSION}")
+        //                 img.push('latest')
+        //             }
+        //         }
+        //     }
+        // }
         // stage('dockerRegi push'){
         //     steps{
         //         sh 'docker -H tcp://192.168.10.1:2375 ps -a'
@@ -114,17 +114,17 @@ pipeline {
         //         sh "docker -H tcp://192.168.10.1:2375 push localhost:5000/tomcat:${TAG_VERSION}"
         //     }
         // }
-        stage ('k8s deploy'){
-            steps{
-                script {
-                    sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
-                    sh 'chmod +x kubectl'
-                    withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
-                    { 
-                        sh './kubectl apply -f deploy.yaml'
-                    }
-                }
-            }
-        }
+        // stage ('k8s deploy'){
+        //     steps{
+        //         script {
+        //             sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
+        //             sh 'chmod +x kubectl'
+        //             withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
+        //             { 
+        //                 sh './kubectl apply -f deploy.yaml'
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
