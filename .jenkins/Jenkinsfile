@@ -119,7 +119,7 @@ pipeline {
                     withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
                     { 
                         sh "sed -i 's/springweb:.*/springweb:${TAG_VERSION}/g' springweb.yaml"
-                        sh './kubectl apply -f deploy.yaml'
+                        sh './kubectl apply -f springweb.yaml'
                     }
                 }
             }
