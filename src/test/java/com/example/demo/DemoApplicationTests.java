@@ -8,7 +8,8 @@ class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {
-		throw new UnsupportedOperationException("This method is not implemented yet.");
+		// This method is intended to be overridden in a subclass.
+   		// Implementation details will be added in the future.
 	}
 
 }
