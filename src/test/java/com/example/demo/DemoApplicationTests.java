@@ -8,6 +8,7 @@ class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {
+		throw new UnsupportedOperationException("This method is not implemented yet.");
 	}
 
 }
