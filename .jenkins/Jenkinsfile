@@ -79,7 +79,7 @@ pipeline {
                             "https://uploads.github.com/repos/${GIT_USERNAME}/${GIT_REPO}/releases/${id}/assets?name=${GIT_REPO}-${TAG_VERSION}.war" \
                             --data-binary "@${GIT_REPO}-${TAG_VERSION}.war"
                     """
-                    sh "mv ${GIT_REPO}-${TAG_VERSION}.war root.war"
+                    sh "mv ${GIT_REPO}-${TAG_VERSION}.war Root.war"
                 }
             }
         }     
@@ -111,7 +111,7 @@ pipeline {
                 sh 'docker -H tcp://192.168.10.1:2375 ps -a'
                 sh "docker -H tcp://192.168.10.1:2375 tag ehszl409/personal-prj-tomcat:${TAG_VERSION} localhost:5000/tomcat:${TAG_VERSION}"
                 sh "docker -H tcp://192.168.10.1:2375 push localhost:5000/tomcat:${TAG_VERSION}"
-                sh "docker -H tcp://192/168/10/1:2375 rmi ehszl409/personal-prj-tomcat:${TAG_VERSION}"
+                sh "docker -H tcp://192.168.10.1:2375 rmi ehszl409/personal-prj-tomcat:${TAG_VERSION}"
             }
         }
         stage ('k8s deploy'){
