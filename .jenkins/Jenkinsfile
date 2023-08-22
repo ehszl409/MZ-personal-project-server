@@ -111,17 +111,17 @@ pipeline {
                 sh "docker -H tcp://192.168.10.2:2375 rmi ehszl409/springweb:latest localhost:5000/springweb:latest"
             }
         }
-        // stage ('k8s deploy'){
-        //     steps{
-        //         script {
-        //             sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
-        //             sh 'chmod +x kubectl'
-        //             withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
-        //             { 
-        //                 sh './kubectl apply -f deploy.yaml'
-        //             }
-        //         }
-        //     }
-        // }
+        stage ('k8s deploy'){
+            steps{
+                script {
+                    sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
+                    sh 'chmod +x kubectl'
+                    withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
+                    { 
+                        sh './kubectl apply -f deploy.yaml'
+                    }
+                }
+            }
+        }
     }
 }
