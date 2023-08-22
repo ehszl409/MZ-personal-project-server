@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: test
-        image: ehszl409/personal-prj-tomcat:latest
+        image: ehszl409/springweb:latest
         resources:
           limits: 
             memory: "512Mi"
