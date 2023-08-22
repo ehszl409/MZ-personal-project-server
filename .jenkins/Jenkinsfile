@@ -90,7 +90,7 @@ pipeline {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
                         // Dockerfile 로 이미지 생성 
                         // docker.build("태그명", "Dockerfile 경로") docker pipeline 설치 후 사용 가능
-                        docker.build("ehszl409/personal-prj-tomcat:${TAG_VERSION}","--no-cache", "./")    
+                        docker.build("ehszl409/personal-prj-tomcat:${TAG_VERSION}", "--no-cache", "./")    
                     }
                 }
             }
