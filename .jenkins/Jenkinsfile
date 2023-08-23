@@ -105,8 +105,11 @@ pipeline {
             steps{
                 sh "docker -H tcp://192.168.10.3:2375 pull ehszl409/springweb:${TAG_VERSION}"
                 sh "docker -H tcp://192.168.10.3:2375 tag ehszl409/springweb:${TAG_VERSION} localhost:5000/springweb:${TAG_VERSION}"
+                sh "docker -H tcp://192.168.10.3:2375 tag ehszl409/springweb:${TAG_VERSION} localhost:5000/springweb:latest"
                 sh "docker -H tcp://192.168.10.3:2375 push localhost:5000/springweb:${TAG_VERSION}"
+                sh "docker -H tcp://192.168.10.3:2375 push localhost:5000/springweb:latest"
                 sh "docker -H tcp://192.168.10.3:2375 rmi localhost:5000/springweb:${TAG_VERSION}"
+                sh "docker -H tcp://192.168.10.3:2375 rmi localhost:5000/springweb:latest"
                 sh "docker -H tcp://192.168.10.3:2375 rmi ehszl409/springweb:${TAG_VERSION}"
             }
         }
