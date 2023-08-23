@@ -11,14 +11,12 @@ pipeline {
     }
     stages {
         stage('maven build, test, packaging(war)') {
-            agent {
                 docker {
                     image 'maven:3.8.3-openjdk-17'
                     reuseNode true
                     registryUrl 'https://index.docker.io/v1/'
                     registryCredentialsId 'docker-hub'
                 }
-            }
                 steps {
                     sh 'mvn clean install'
                 }     
@@ -111,18 +109,18 @@ pipeline {
                 sh "docker rmi ehszl409/springweb:latest localhost:5000/springweb:latest"
             }
         }
-        stage ('k8s deploy'){
-            steps{
-                script {
-                    sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
-                    sh 'chmod +x kubectl'
-                    withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
-                    { 
-                        sh "sed -i 's/springweb:.*/springweb:${TAG_VERSION}/g' springweb.yaml"
-                        sh './kubectl apply -f springweb.yaml'
-                    }
-                }
-            }
-        }
+        // stage ('k8s deploy'){
+        //     steps{
+        //         script {
+        //             sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
+        //             sh 'chmod +x kubectl'
+        //             withKubeConfig([credentialsId: 'admin.conf', serverUrl: 'https://kube-controller:6443'])
+        //             { 
+        //                 sh "sed -i 's/springweb:.*/springweb:${TAG_VERSION}/g' springweb.yaml"
+        //                 sh './kubectl apply -f springweb.yaml'
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
