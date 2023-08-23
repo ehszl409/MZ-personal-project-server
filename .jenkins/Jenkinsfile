@@ -81,35 +81,33 @@ pipeline {
         //         }
         //     }
         // }
-        // stage('dockerfile build'){
-        //     steps{
-        //         script{
-        //             docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
-        //                 docker.build("ehszl409/springweb:${TAG_VERSION}", "--no-cache ./")    
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('dockerHub push'){
-        //     steps{
-        //         script{
-        //             docker.withRegistry('https://index.docker.io/v1/', 'docker-hub'){
-        //                 def img = docker.image("ehszl409/springweb:${TAG_VERSION}")
-        //                 img.push("${TAG_VERSION}")
-        //                 img.push('latest')
-        //             }
-        //         }
-        //     }
-        // }
+        stage('dockerfile build'){
+            steps{
+                script{
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
+                        docker.build("ehszl409/springweb:${TAG_VERSION}", "--no-cache ./")    
+                    }
+                }
+            }
+        }
+        stage('dockerHub push'){
+            steps{
+                script{
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub'){
+                        def img = docker.image("ehszl409/springweb:${TAG_VERSION}")
+                        img.push("${TAG_VERSION}")
+                        img.push('latest')
+                    }
+                }
+            }
+        }
         stage('dockerRepo push'){
             steps{
-                // sh "docker tag ehszl409/springweb:${TAG_VERSION} localhost:5000/springweb:${TAG_VERSION}"
-                // sh "docker tag ehszl409/springweb:${TAG_VERSION} localhost:5000/springweb:latest"
-                // sh "docker push localhost:5000/springweb:${TAG_VERSION}"
-                // sh "docker push localhost:5000/springweb:latest"
-                // sh "docker rmi ehszl409/springweb:${TAG_VERSION} localhost:5000/springweb:${TAG_VERSION}"
-                // sh "docker rmi ehszl409/springweb:latest localhost:5000/springweb:latest"
-                sh "docker -H tcp://192.168.20.2:2375 ps"
+                sh "docker -H tcp://192.168.10.3:2375 pull ehszl409/springweb:${TAG_VERSION}"
+                sh "docker -H tcp://192.168.10.3:2375 tag ehszl409/springweb:${TAG_VERSION} localhost:5000/springweb:${TAG_VERSION}"
+                sh "docker -H tcp://192.168.10.3:2375 push localhost:5000/springweb:${TAG_VERSION}"
+                sh "docker -H tcp://192.168.10.3:2375 rmi localhost:5000/springweb:${TAG_VERSION}"
+                sh "docker -H tcp://192.168.10.3:2375 rmi ehszl409/springweb:${TAG_VERSION}"
             }
         }
         // stage ('k8s deploy'){
