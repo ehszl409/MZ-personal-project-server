@@ -11,14 +11,13 @@ pipeline {
     }
     stages {
         stage('maven build, test, packaging(war)') {
-            agent {
+            agent {}
                 docker {
                     image 'maven:3.8.3-openjdk-17'
                     reuseNode true
                     registryUrl 'https://index.docker.io/v1/'
                     registryCredentialsId 'docker-hub'
                 }
-            }
                 steps {
                     sh 'mvn clean install'
                 }     
