@@ -19,9 +19,9 @@ pipeline {
                     registryCredentialsId 'docker-hub'
                 }
             }
-                steps {
-                    sh 'mvn clean install'
-                }     
+            steps {
+                sh 'mvn clean install'
+            }     
         }
         stage('sonarQube testing') {
             steps {
