@@ -11,7 +11,7 @@ public class DemoApplication {
 
 	@RequestMapping("/")
 	String home() {
-		return "<h1>hello Megazone</h1>";
+		return "<h1>hello PARKS</h1>";
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
